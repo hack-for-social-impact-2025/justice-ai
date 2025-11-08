@@ -83,52 +83,52 @@ class GeminiService:
         mock_summary = f"""# Parole Hearing Summary
 
 ## Case Information
-- **Inmate**: {inmate_name}
-- **CDCR Number**: {cdcr_number}  
-- **Hearing Date**: {hearing_date}
+- **Inmate**: {inmate_name} - (Line 8)
+- **CDCR Number**: {cdcr_number} - (Line 9)  
+- **Hearing Date**: {hearing_date} - (Lines 4-5)
 
 ## Offense Context
-- **Crime**: {crime}
-- **Sentence**: {sentence}
-- **Circumstances**: Domestic violence case involving allegations of methamphetamine use and jealousy-related violence
-- **Victim**: Female acquaintance known for approximately 5 months
+- **Crime**: {crime} - "controlling offense of second-degree murder" (Line 9)
+- **Sentence**: "15 years of life with enhancements for the use of a deadly weapon" - (Lines 10-11)
+- **Circumstances**: Domestic violence case involving methamphetamine use and jealousy accusations
+- **Victim**: Female acquaintance known for approximately 5 months - "victim who you knew for about five months" (Line 11)
 
 ## Programming
 - **Completed**: Limited programming noted
 - **Recommended**: 
-  - Anger management programs
-  - GOGI (Boss of My Own Brain) program
-  - Alternatives to Violence Program (AVP)  
-  - Domestic violence education
-  - Relapse prevention planning
+  - "GOGI, boss of my own brain" - (Commissioner Ruff, Line 17)
+  - "Alternatives to Violence Program (AVP)" - (Commissioner Weilbacher, Lines 20-21)  
+  - Domestic violence education programs
+  - "create relapse prevention plans" - (Commissioner Weilbacher, Line 23)
 
 ## Parole Factors Cited
 - **Unsuitability Factors**:
-  - Recent disciplinary violations (115s)
-  - Multiple fights and violence incidents
+  - "You can't get any more 115s" - (Commissioner Ruff, Line 1)
+  - "You've been in quite a few fights this year" - (Commissioner Ruff, Line 2-3)
   - Lack of sustained prosocial behavior
-  - Minimization of offense circumstances
-- **Classification Score**: 68 points (manageable but concerning)
-- **Recommendations**: 3-year denial with stipulation
+  - "It makes your version look like you're minimizing" - (Commissioner Ruff, Line 12)
+- **Classification Score**: "68 points" - (Emmanuel Young, Line 4)
+- **Recommendations**: 3-year denial with stipulation - (Lines 20-21)
 
 ## Claim-of-Innocence Evidence
 - No specific innocence claims noted
-- Some questioning of sentence modifications and hearing scheduling
-- Inmate expressed confusion about court order timing
+- "my initial life term was vacated" - (Emmanuel Young, Line 4-5)
+- "I was never brought to Board in 2022" - (Emmanuel Young, Line 7)
+- Questions about court order timing and sentence modifications
 
 ## Contradictions
-- **Victim vs. Offender Account**: Significant discrepancies between inmate's version and victim's account of events
-- **Minimization Concerns**: Board noted inmate's version appears to minimize the severity of violence
-- **Witness Reports**: Multiple witnesses provided accounts supporting victim's version
+- **Victim vs. Offender Account**: "when I read your version of what happened, and I read the version from the victim...her version is significantly different than yours" - (Commissioner Ruff, Lines 8-12)
+- **Violence Minimization**: "she was beat to death basically" vs inmate's account - (Commissioner Ruff, Line 13)
+- **Witness Reports**: "these witnesses who are in these reports, they report that" - (Commissioner Ruff, Line 17)
 
 ## Board Recommendations
-- Remain disciplinary-free
-- Complete comprehensive programming 
+- "remain disciplinary free" - (Commissioner Ruff, Line 23)
+- "get engaged in programming, not just to get the certificate, but to actually learn from it" - (Commissioner Ruff, Lines 24-25)
 - Develop coping skills for anger management
 - Address domestic violence patterns
 - Consider facility transfer for better programming environment
 
-*Note: This is a computer-generated summary based on document analysis. Next hearing scheduled for 2027.*"""
+*Note: This is a computer-generated summary with line number citations. Next hearing scheduled for 2027.*"""
 
         return mock_summary
 

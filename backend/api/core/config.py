@@ -36,8 +36,8 @@ class Config:
         if GENAI_AVAILABLE and genai and cls.GEMINI_API_KEY:
             try:
                 genai.configure(api_key=cls.GEMINI_API_KEY)  # type: ignore
-                # Use the basic gemini-pro model which should be available
-                return genai.GenerativeModel("gemini-pro")  # type: ignore
+                # Use the updated gemini-2.5-flash model
+                return genai.GenerativeModel("gemini-2.5-flash")  # type: ignore
             except Exception as e:
                 print(f"Error configuring Gemini: {e}")
                 return None

@@ -28,12 +28,26 @@ async def process_pdf_with_gemini(file: UploadFile = File(...), prompt: Optional
     Please analyze this parole hearing document and provide a concise 1-page markdown summary covering:
     
     1. **Offense Context**: Brief description of the original crime and circumstances
+       - Include citations and quotes from the document
     2. **Programming**: Educational programs, therapy, or self-help completed or recommended
+       - Cite specific recommendations from commissioners
     3. **Parole Factors Cited**: Key factors mentioned by the board regarding suitability/unsuitability
+       - Include direct quotes from board members explaining their reasoning
     4. **Claim-of-Innocence Evidence**: Any evidence or statements regarding innocence claims
+       - Quote specific statements from participants
     5. **Contradictions**: Any discrepancies noted between different versions of events
+       - Reference where in the document these contradictions are mentioned
     
-    Format as clean markdown with proper headings and bullet points. Keep it professional and factual.
+    **For each point, include precise citations with line numbers:**
+    - Direct quotes: "Quote text" - (Speaker Name, Line X)
+    - References: Information found at Line X-Y
+    - Always include the specific line numbers where information is located
+    
+    **Example citation format:**
+    - "You solemnly swear, affirm the testimony..." - (Commissioner Ruff, Line 16)
+    - Sentence details at Lines 9-11
+    
+    Format as clean markdown with proper headings, bullet points, and precise line number citations. Keep it professional and factual.
     """
 
     # Read file content
@@ -96,26 +110,42 @@ async def generate_parole_summary(file: UploadFile = File(...)):
     ### Offense Context
     - Brief description of the original crime and circumstances
     - Sentence details and timeline
+    - Include citations showing where this information appears in the document (e.g., page numbers, speaker quotes)
     
     ### Programming
     - Educational programs completed or in progress
     - Therapy and self-help programs
     - Recommendations made by the board
+    - Cite specific quotes from commissioners or documentation where programs are mentioned
     
     ### Parole Factors Cited
     - Key factors mentioned regarding suitability/unsuitability
     - Board's concerns and recommendations
     - Classification score and behavioral factors
+    - Include direct quotes from commissioners explaining their reasoning
     
     ### Claim-of-Innocence Evidence
     - Any evidence or statements regarding innocence claims
     - Discrepancies in versions of events
+    - Quote specific statements from the inmate or attorney regarding innocence or procedural issues
     
     ### Contradictions
     - Any noted contradictions between different accounts
     - Areas where further clarification may be needed
+    - Reference specific parts of the transcript where contradictions are highlighted
     
-    Format as clean markdown with proper headings and bullet points. Keep it professional, factual, and under one page.
+    **IMPORTANT: For each major point, include citations with specific line numbers:**
+    - Direct quotes: "Quote text" - (Speaker Name, Line X)
+    - Factual references: Information found at Line X-Y
+    - When referencing testimony: As stated by [Speaker] at Line X
+    - Use the exact line numbers where the information appears in the document
+    
+    **Citations Format Examples:**
+    - "You can't get any more 115s" - (Commissioner Ruff, Line 245)
+    - Crime details found at Lines 8-12
+    - Programming recommendations mentioned at Lines 180-195
+    
+    Format as clean markdown with proper headings, bullet points, and precise line number citations. Keep it professional, factual, and under one page.
     """
 
     # Read file content
