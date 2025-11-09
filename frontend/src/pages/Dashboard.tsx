@@ -121,23 +121,6 @@ function Dashboard() {
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(' ');
 
-  // Use innocence claim data from JSON
-  const innocenceFindings = innocenClaimData.innocence_analysis.findings;
-
-  // Helper to format speaker name
-  const formatSpeakerName = (name: string) =>
-    name
-      .split(' ')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
-
-  // Helper to format category
-  const formatCategory = (cat: string) =>
-    cat
-      .split('_')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
-
   return (
     <Box sx={{ display: "flex", height: "100vh", bgcolor: "#fff" }}>
       {/* Sidebar */}
