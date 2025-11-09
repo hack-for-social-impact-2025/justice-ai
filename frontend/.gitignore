@@ -11,6 +11,11 @@ node_modules
 dist
 dist-ssr
 *.local
+.vite
+
+# Next.js artifacts (not used in this Vite project)
+.next
+next-env.d.ts
 
 # Editor directories and files
 .vscode/*
