@@ -8,7 +8,8 @@ React + TypeScript + Vite frontend application for PDF processing. Integrates wi
 - **TypeScript** 5.9.3
 - **Vite** 7.1.14 (build tool)
 - **Axios** 1.13.2 (HTTP client)
-- **Styling**: Inline CSS (no frameworks)
+- **react-markdown** 10.1.0 (markdown rendering)
+- **Styling**: CSS Variables + Inline Styles (no frameworks)
 
 ## Project Structure
 ```
@@ -51,7 +52,8 @@ frontend/
    - Direct file input for PDF upload
    - Calls `/pdf/process` endpoint
    - Shows loading, error, and success states
-   - Displays API response (metadata + markdown summary)
+   - Uses `react-markdown` to render formatted markdown summaries
+   - Displays API response with metadata and formatted summary
 
 ### API Service
 **Location**: `src/services/api.ts`
@@ -71,6 +73,13 @@ interface PdfProcessResponse {
   extracted_text_length: number
   markdown_summary: string
   summary_type: string
+}
+```
+
+**Error Type**:
+```typescript
+interface PdfProcessError {
+  detail: string
 }
 ```
 
@@ -164,6 +173,8 @@ npm run lint
 - Export types that are used across multiple files
 
 ## TypeScript Configuration
+**Note**: Main configuration is in `tsconfig.app.json` (referenced by `tsconfig.json`)
+
 - **Strict mode** enabled
 - **verbatimModuleSyntax** enabled - requires type-only imports for types
 - No unused locals/parameters
@@ -188,11 +199,13 @@ import { useState, ChangeEvent, FormEvent } from 'react'
 ✅ Test pages for isolated feature testing
 ✅ Navigation system (state-based, no router)
 ✅ Production build working (type-only imports configured)
-🚧 Full integration: Modal → API → Display results (in progress)
+✅ API integration complete with react-markdown rendering
+✅ Error handling and loading states implemented
+✅ Light mode only CSS configuration
 
 ## Next Steps
-1. Test API integration with backend
-2. Integrate API into modal (call backend on upload)
-3. Create results display component for markdown summary
-4. Add error handling throughout
-5. Create production page combining all features
+1. Integrate modal with API (combine ModalTestPage + ApiTestPage functionality)
+2. Create main production page with full workflow
+3. Add file upload progress indicator
+4. Implement custom prompt and max tokens input fields
+5. Add result export/download functionality
