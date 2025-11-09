@@ -1,5 +1,5 @@
 from fastapi import APIRouter, UploadFile, HTTPException
-from ..services.gcs_client import upload_file as gcs_upload_file
+from ..services.gcs_client import upload_file as gcs_upload_file, list_files as gcs_list_files
 
 router = APIRouter(prefix="/file", tags=["File"])
 
@@ -21,6 +21,20 @@ async def upload_file_route(file: UploadFile):
             "file_size": file.size,
             "content_type": file.content_type,
             "url": url
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/list")
+async def list_files_route():
+    """
+    List all files stored in Google Cloud Storage
+    """
+    try:
+        files = gcs_list_files()
+        return {
+            "success": True,
+            "files": files
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
