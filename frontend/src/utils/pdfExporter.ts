@@ -169,26 +169,6 @@ export class PDFExporter {
     }
   }
 
-  private addList(items: string[], indent: number = 0): void {
-    for (const item of items) {
-      if (item && item.trim() !== "") {
-        this.checkPageBreak();
-        this.doc.setFontSize(10);
-        this.doc.setFont("helvetica", "normal");
-        this.doc.text("•", this.margin + indent, this.currentY);
-
-        const maxWidth = 165 - indent;
-        const lines = this.doc.splitTextToSize(item, maxWidth);
-
-        for (let i = 0; i < lines.length; i++) {
-          this.checkPageBreak();
-          this.doc.text(lines[i], this.margin + indent + 5, this.currentY);
-          this.currentY += this.lineHeight;
-        }
-      }
-    }
-  }
-
   private addSpacer(height: number = 6): void {
     this.currentY += height;
   }

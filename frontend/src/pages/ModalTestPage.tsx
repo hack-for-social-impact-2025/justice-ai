@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import PdfUploadModal from '../PdfUploadModal'
+import { type ParoleSummaryResponse } from '../services/api'
 
 function ModalTestPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+  const [uploadedData, setUploadedData] = useState<ParoleSummaryResponse | null>(null)
 
-  const handleUpload = (file: File) => {
-    setUploadedFile(file)
-    console.log('File uploaded:', file.name)
+  const handleUpload = (data: ParoleSummaryResponse) => {
+    setUploadedData(data)
+    console.log('PDF processed:', data.filename)
   }
 
   return (
@@ -40,7 +41,7 @@ function ModalTestPage() {
         Open Upload Modal
       </button>
 
-      {uploadedFile && (
+      {uploadedData && (
         <div
           style={{
             marginTop: 'var(--spacing-2xl)',
@@ -53,16 +54,16 @@ function ModalTestPage() {
           }}
         >
           <h3 style={{ margin: '0 0 var(--spacing-xs) 0', color: 'var(--success-heading)' }}>
-            File Selected in Modal
+            PDF Processed Successfully
           </h3>
           <p style={{ margin: 0, color: 'var(--success-text)' }}>
-            <strong>Name:</strong> {uploadedFile.name}
+            <strong>File:</strong> {uploadedData.filename}
           </p>
           <p style={{ margin: 0, color: 'var(--success-text)' }}>
-            <strong>Size:</strong> {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
+            <strong>Size:</strong> {(uploadedData.file_size / 1024 / 1024).toFixed(2)} MB
           </p>
           <p style={{ margin: 0, color: 'var(--success-text)' }}>
-            <strong>Type:</strong> {uploadedFile.type}
+            <strong>Summary Length:</strong> {uploadedData.markdown_summary.length} characters
           </p>
         </div>
       )}
