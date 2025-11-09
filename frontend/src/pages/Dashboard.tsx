@@ -99,7 +99,7 @@ function Dashboard() {
               </ListItemAvatar>
               <ListItemText
                 primary={
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                     <Typography fontWeight={600}>{client.name}</Typography>
                     <Chip
                       label={client.status}
@@ -137,43 +137,41 @@ function Dashboard() {
       <Box sx={{ flex: 1, p: 4 }}>
         {/* Document Analysis Section */}
         <Paper elevation={2} sx={{ p: 4, borderRadius: 3, maxWidth: 800, mx: 'auto', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, justifyContent: 'space-between' }}>
-            <Box>
-              <Typography variant="h5" fontWeight={900} sx={{ color: '#1a1a1a', textAlign: 'left', mb: 0.5 }}>
-                Case Analysis
-              </Typography>
-              <Typography variant="subtitle1" color="#6b7280" sx={{ fontWeight: 500, textAlign: 'left', mb: 2 }}>
-                Comprehensive legal document summary
-              </Typography>
-              <Typography variant="h6" fontWeight={700} sx={{ color: '#1a1a1a', textAlign: 'left', mb: 2 }}>
-                Client Information
-              </Typography>
-              <Box sx={{ display: 'flex', gap: 6, mt: 2 }}>
-                <Box>
-                  <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>
-                    Client's Name & CDCR No.
-                  </Typography>
-                  <Typography fontWeight={600} sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.clientInfo.name} ({selectedData?.demographics.clientInfo.cdcrNumber})</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>
-                    Contact Information
-                  </Typography>
-                  <Typography fontWeight={600} sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.clientInfo.contactInfo}</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>
-                    Date of Birth
-                  </Typography>
-                  <Typography fontWeight={600} sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.clientInfo.dateOfBirth}</Typography>
-                </Box>
-              </Box>
-            </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+            <Typography variant="h5" fontWeight={900} sx={{ color: '#1a1a1a', textAlign: 'left', mb: 0 }}>
+              Case Analysis
+            </Typography>
             <Button variant="contained" color="primary" sx={{ borderRadius: 2, textTransform: 'none', fontWeight: 600, px: 2, py: 1 }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span style={{ fontSize: 18, marginRight: 4 }}>⭳</span> Export
               </span>
             </Button>
+          </Box>
+          <Typography variant="subtitle1" color="#6b7280" sx={{ fontWeight: 500, textAlign: 'left', mb: 2 }}>
+            Comprehensive legal document summary
+          </Typography>
+          <Typography variant="h6" fontWeight={700} sx={{ color: '#1a1a1a', textAlign: 'left', mb: 2 }}>
+            Client Information
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 6, mt: 2 }}>
+            <Box>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>
+                Client's Name & CDCR No.
+              </Typography>
+              <Typography fontWeight={600} sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.clientInfo.name} ({selectedData?.demographics.clientInfo.cdcrNumber})</Typography>
+            </Box>
+            <Box>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>
+                Contact Information
+              </Typography>
+              <Typography fontWeight={600} sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.clientInfo.contactInfo}</Typography>
+            </Box>
+            <Box>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>
+                Date of Birth
+              </Typography>
+              <Typography fontWeight={600} sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.clientInfo.dateOfBirth}</Typography>
+            </Box>
           </Box>
           <Divider sx={{ mb: 3 }} />
           {/* Introduction */}

@@ -9,7 +9,7 @@ function App() {
   return (
     <div style={{ minHeight: '100vh', position: 'relative' }}>
       {/* Fixed Header only on right side */}
-      <Box sx={{ position: 'fixed', top: 0, right: 0, width: '70%', zIndex: 1000, bgcolor: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', px: 4, py: 2 }}>
+      <Box sx={{ position: 'fixed', top: 0, right: 0, width: '70%', zIndex: 1000, bgcolor: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', px: 6, py: 2 }}>
         <Typography variant="h4" fontWeight={900} sx={{ color: 'black', textAlign: 'left' }}>
           JusticeAI
         </Typography>
