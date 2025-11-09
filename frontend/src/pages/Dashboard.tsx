@@ -17,33 +17,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import PdfUploadModal from '../PdfUploadModal';
-
-const clients = [
-  {
-    id: '1',
-    name: 'Sarah Johnson',
-    initials: 'SJ',
-    caseNumber: '2024-CV-1234',
-    documents: 12,
-    status: 'active',
-  },
-  {
-    id: '2',
-    name: 'Michael Chen',
-    initials: 'MC',
-    caseNumber: '2024-CV-1235',
-    documents: 8,
-    status: 'active',
-  },
-  {
-    id: '3',
-    name: 'Emily Rodriguez',
-    initials: 'ER',
-    caseNumber: '2024-CV-1236',
-    documents: 5,
-    status: 'pending',
-  },
-];
+import mockData from '../mockData.json';
 
 const statusColor = {
   active: 'primary',
@@ -51,6 +25,16 @@ const statusColor = {
 };
 
 function Dashboard() {
+  // Convert mockData to sidebar clients
+  const clients = mockData.map((item) => ({
+    id: item.id,
+    name: item.demographics.clientInfo.name,
+    cdcrNumber: item.demographics.clientInfo.cdcrNumber,
+    dateOfBirth: item.demographics.clientInfo.dateOfBirth,
+    contactInfo: item.demographics.clientInfo.contactInfo,
+    status: 'active', // You can adjust status logic if needed
+  }));
+
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState(clients[0]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,8 +42,11 @@ function Dashboard() {
   const filteredClients = clients.filter(
     (c) =>
       c.name.toLowerCase().includes(search.toLowerCase()) ||
-      c.caseNumber.toLowerCase().includes(search.toLowerCase())
+      c.cdcrNumber.toLowerCase().includes(search.toLowerCase())
   );
+
+  // Find selected client's full data
+  const selectedData = mockData.find((item) => item.demographics.clientInfo.name === selected.name);
 
   return (
     <Box sx={{ display: 'flex', height: '100vh', bgcolor: '#fff' }}>
@@ -108,7 +95,7 @@ function Dashboard() {
               }}
             >
               <ListItemAvatar>
-                <Avatar>{client.initials}</Avatar>
+                <Avatar>{client.name.split(' ').map((n) => n[0]).join('')}</Avatar>
               </ListItemAvatar>
               <ListItemText
                 primary={
@@ -116,7 +103,7 @@ function Dashboard() {
                     <Typography fontWeight={600}>{client.name}</Typography>
                     <Chip
                       label={client.status}
-                      color={statusColor[client.status]}
+                      color={client.status === 'active' ? 'primary' : 'default'}
                       size="small"
                       sx={{ textTransform: 'capitalize', fontWeight: 500 }}
                     />
@@ -125,7 +112,7 @@ function Dashboard() {
                 secondary={
                   <Box>
                     <Typography variant="body2" color="text.secondary">
-                      Case #{client.caseNumber}
+                      CDCR #{client.cdcrNumber}
                     </Typography>
                   </Box>
                 }
@@ -149,54 +136,242 @@ function Dashboard() {
       {/* Main Content */}
       <Box sx={{ flex: 1, p: 4 }}>
         {/* Header */}
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h5" fontWeight={700} sx={{ flex: 1 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mb: 3 }}>
+          <Typography variant="h5" fontWeight={700} sx={{ mb: 0.5, color: '#1a1a1a', textAlign: 'left' }}>
             JusticeAI
           </Typography>
         </Box>
         <Divider sx={{ mb: 3 }} />
         {/* Document Analysis Section */}
-        <Paper elevation={2} sx={{ p: 4, borderRadius: 3, maxWidth: 700 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <Typography variant="h5" fontWeight={700} sx={{ flex: 1 }}>
+        <Paper elevation={2} sx={{ p: 4, borderRadius: 3, maxWidth: 800, mx: 'auto', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mb: 2 }}>
+            <Typography variant="h5" fontWeight={700} sx={{ color: '#1a1a1a', textAlign: 'left', mb: 0.5 }}>
               Case Analysis
             </Typography>
-            <Button variant="contained" color="primary" sx={{ borderRadius: 2 }}>
-              Export
-            </Button>
+            <Typography variant="subtitle1" color="#6b7280" sx={{ fontWeight: 500, textAlign: 'left', mb: 1 }}>
+              Comprehensive legal document summary
+            </Typography>
           </Box>
-          <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 2 }}>
-            Comprehensive legal document summary
+          <Button variant="contained" color="primary" sx={{ borderRadius: 2, textTransform: 'none', fontWeight: 600, px: 2, py: 1, position: 'absolute', top: 32, right: 32 }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ fontSize: 18, marginRight: 4 }}>⭳</span> Export
+            </span>
+          </Button>
+          <Divider sx={{ mb: 3 }} />
+          {/* Client Information Section */}
+          <Typography variant="h6" fontWeight={700} sx={{ mb: 2, color: '#1a1a1a', textAlign: 'left' }}>
+            Client Information
           </Typography>
-          <Divider sx={{ mb: 2 }} />
-          <Box sx={{ display: 'flex', gap: 6, mb: 2 }}>
-            <Box>
-              <Typography fontWeight={600}>Client's Name & CDCR No.</Typography>
-              <Typography>{selected.name} (A12345)</Typography>
+          <Box sx={{ display: 'flex', gap: 6, mb: 3 }}>
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>
+                Client's Name
+              </Typography>
+              <Typography fontWeight={600} sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.clientInfo.name}</Typography>
             </Box>
-            <Box>
-              <Typography fontWeight={600}>Contact Information</Typography>
-              <Typography>CDCR Incarcerated Person Locator</Typography>
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>
+                CDCR No.
+              </Typography>
+              <Typography fontWeight={600} sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.clientInfo.cdcrNumber}</Typography>
             </Box>
-            <Box>
-              <Typography fontWeight={600}>Date of Birth</Typography>
-              <Typography>March 15, 1985</Typography>
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>
+                Contact Information
+              </Typography>
+              <Typography fontWeight={600} sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.clientInfo.contactInfo}</Typography>
+            </Box>
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>
+                Date of Birth
+              </Typography>
+              <Typography fontWeight={600} sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.clientInfo.dateOfBirth}</Typography>
             </Box>
           </Box>
-          <Divider sx={{ mb: 2 }} />
-          <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 1 }}>
+          <Divider sx={{ mb: 3 }} />
+          {/* Introduction */}
+          <Typography variant="h6" fontWeight={700} sx={{ mb: 1.5, color: '#1a1a1a', textAlign: 'left' }}>
             Introduction
           </Typography>
-          <Typography sx={{ mb: 2 }}>
-            {selected.name} was convicted of first-degree murder in 2010. The defense argued self-defense and presented alibi witnesses. {selected.name} maintains their innocence, stating they were at their workplace at the time of the incident and were misidentified by witnesses due to similar physical appearance to another individual in the area.
+          <Typography sx={{ mb: 3, color: '#1a1a1a', fontWeight: 400, textAlign: 'left' }}>
+            {selectedData?.demographics.introduction.shortSummary}
           </Typography>
-          <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 1 }}>
+          <Divider sx={{ mb: 3 }} />
+          {/* Evidence Used to Convict */}
+          <Typography variant="h6" fontWeight={700} sx={{ mb: 1.5, color: '#1a1a1a', textAlign: 'left' }}>
             Evidence Used to Convict
           </Typography>
-          <ul>
-            <li>Testimony from John Doe that placed defendant at the scene</li>
-            <li>Eyewitness testimony from Jane Smith identifying the defendant</li>
-            <li>Forensic evidence linking defendant to the crime scene</li>
+          <ul style={{ marginBottom: 24, marginTop: 0, paddingLeft: 24, textAlign: 'left' }}>
+            {selectedData?.demographics.evidenceUsedToConvict.map((evidence, idx) => (
+              <li key={idx} style={{ marginBottom: 8, color: '#1a1a1a', fontWeight: 400 }}>{evidence}</li>
+            ))}
+          </ul>
+          <Divider sx={{ mb: 3 }} />
+          
+          {/* Conviction Information */}
+          <Typography variant="h6" fontWeight={700} sx={{ mb: 1.5, color: '#1a1a1a', textAlign: 'left' }}>
+            Conviction Information
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 6, mb: 3 }}>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Date of Crime</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.convictionInfo.dateOfCrime}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Location of Crime</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.convictionInfo.locationOfCrime}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Date of Arrest</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.convictionInfo.dateOfArrest}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Charges</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.convictionInfo.charges}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Date of Conviction</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.convictionInfo.dateOfConviction}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Sentence Length</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.convictionInfo.sentenceLength}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>County</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.convictionInfo.county}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Trial or Plea</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.convictionInfo.trialOrPlea}</Typography>
+            </Box>
+          </Box>
+          <Divider sx={{ mb: 3 }} />
+          {/* Appeal Info */}
+          <Typography variant="h6" fontWeight={700} sx={{ mb: 1.5, color: '#1a1a1a', textAlign: 'left' }}>
+            Appeal Information
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 6, mb: 3 }}>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Direct Appeal Filed</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.appealInfo.directAppealFiled}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Appellate Court Case Number</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.appealInfo.appellateCourtCaseNumber}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Date Decided</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.appealInfo.dateDecided}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Result</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.appealInfo.result}</Typography>
+            </Box>
+            {Array.isArray(selectedData?.demographics.appealInfo?.habenasFilings) && selectedData.demographics.appealInfo.habenasFilings.length > 0 && (
+              <Box sx={{ flex: 1, minWidth: 200 }}>
+                <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Habeas Filings</Typography>
+                <Box>
+                  {selectedData.demographics.appealInfo.habenasFilings.map((filing, idx) => (
+                    <Typography key={idx} sx={{ color: '#1a1a1a', textAlign: 'left' }}>{filing}</Typography>
+                  ))}
+                </Box>
+              </Box>
+            )}
+          </Box>
+          <Divider sx={{ mb: 3 }} />
+          {/* Attorney Info */}
+          <Typography variant="h6" fontWeight={700} sx={{ mb: 1.5, color: '#1a1a1a', textAlign: 'left' }}>
+            Attorney Information
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 6, mb: 3 }}>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Current Attorney</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.attorneyInfo.currentAttorneyForIncarceratedPerson?.name} ({selectedData?.demographics.attorneyInfo.currentAttorneyForIncarceratedPerson?.title})</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Firm</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.attorneyInfo.currentAttorneyForIncarceratedPerson?.firm}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Address</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.attorneyInfo.currentAttorneyForIncarceratedPerson?.address}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Phone</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.attorneyInfo.currentAttorneyForIncarceratedPerson?.phone}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Email</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.attorneyInfo.currentAttorneyForIncarceratedPerson?.email}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Present at Hearing</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.attorneyInfo.currentAttorneyForIncarceratedPerson?.presentAtHearing ? 'Yes' : 'No'}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Representation Context</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.attorneyInfo.currentAttorneyForIncarceratedPerson?.representationContext}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Trial Attorney</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.attorneyInfo.trialAttorney?.name}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
+              <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Appellate Attorney</Typography>
+              <Typography sx={{ color: '#1a1a1a', textAlign: 'left' }}>{selectedData?.demographics.attorneyInfo.appellateAttorney?.name}</Typography>
+            </Box>
+            {Array.isArray(selectedData?.demographics.attorneyInfo?.otherLegalRepresentation) && selectedData.demographics.attorneyInfo.otherLegalRepresentation.length > 0 && (
+              <Box sx={{ flex: 1, minWidth: 200 }}>
+                <Typography variant="subtitle2" fontWeight={600} color="#6b7280" sx={{ mb: 0.5, textAlign: 'left' }}>Other Legal Representation</Typography>
+                <Box>
+                  {selectedData.demographics.attorneyInfo.otherLegalRepresentation.map((rep, idx) => (
+                    <Typography key={idx} sx={{ color: '#1a1a1a', textAlign: 'left' }}>{rep.name} {rep.role ? `(${rep.role})` : ''} {'organization' in rep && rep.organization ? `- ${rep.organization}` : ''}</Typography>
+                  ))}
+                </Box>
+              </Box>
+            )}
+          </Box>
+          <Divider sx={{ mb: 3 }} />
+          {/* New Evidence */}
+          <Typography variant="h6" fontWeight={700} sx={{ mb: 1.5, color: '#1a1a1a', textAlign: 'left' }}>
+            New Evidence
+          </Typography>
+          <ul style={{ marginBottom: 24, marginTop: 0, paddingLeft: 24, textAlign: 'left' }}>
+            {selectedData?.demographics.newEvidence.map((evidence, idx) => (
+              <li key={idx} style={{ marginBottom: 8 }}>{evidence}</li>
+            ))}
+          </ul>
+          <Divider sx={{ mb: 3 }} />
+          {/* Physical Description */}
+          <Typography variant="h6" fontWeight={700} sx={{ mb: 1.5, color: '#1a1a1a', textAlign: 'left' }}>
+            Physical Description
+          </Typography>
+          <ul style={{ marginBottom: 24, marginTop: 0, paddingLeft: 24, textAlign: 'left' }}>
+            <li>Height: {selectedData?.demographics.physicalDescription.height}</li>
+            <li>Weight: {selectedData?.demographics.physicalDescription.weight}</li>
+            <li>Race: {selectedData?.demographics.physicalDescription.race}</li>
+            <li>Build: {selectedData?.demographics.physicalDescription.build}</li>
+            <li>Distinguishing Marks: {selectedData?.demographics.physicalDescription.distinguishingMarks}</li>
+          </ul>
+          <Divider sx={{ mb: 3 }} />
+          {/* Victim Info */}
+          <Typography variant="h6" fontWeight={700} sx={{ mb: 1.5, color: '#1a1a1a', textAlign: 'left' }}>
+            Victim Information
+          </Typography>
+          <ul style={{ marginBottom: 24, marginTop: 0, paddingLeft: 24, textAlign: 'left' }}>
+            <li>Name: {selectedData?.demographics.victimInfo.name}</li>
+            <li>Relationship: {selectedData?.demographics.victimInfo.relationship}</li>
+          </ul>
+          <Divider sx={{ mb: 3 }} />
+          {/* Prison Record */}
+          <Typography variant="h6" fontWeight={700} sx={{ mb: 1.5, color: '#1a1a1a', textAlign: 'left' }}>
+            Prison Record
+          </Typography>
+          <ul style={{ marginBottom: 24, marginTop: 0, paddingLeft: 24, textAlign: 'left' }}>
+            <li>Conduct: {selectedData?.demographics.prisonRecord.conduct}</li>
+            <li>Programming: {selectedData?.demographics.prisonRecord.programming}</li>
+            <li>Support: {selectedData?.demographics.prisonRecord.support}</li>
           </ul>
         </Paper>
       </Box>
