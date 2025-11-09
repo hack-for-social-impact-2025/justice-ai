@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Markdown from 'react-markdown'
 import type { PdfProcessResponse } from '../services/api'
 import { uploadPdfForProcessing } from '../services/api'
 
@@ -90,18 +91,16 @@ function ApiTestPage() {
 
           <div style={{ padding: 'var(--spacing-md)', backgroundColor: 'var(--neutral-bg-medium)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--neutral-border-dark)' }}>
             <h3 style={{ marginTop: 0 }}>Markdown Summary:</h3>
-            <pre style={{
-              whiteSpace: 'pre-wrap',
-              wordWrap: 'break-word',
+            <div style={{
               backgroundColor: 'var(--white)',
-              padding: 'var(--spacing-sm)',
+              padding: 'var(--spacing-md)',
               borderRadius: 'var(--radius-sm)',
               border: '1px solid var(--neutral-border-dark)',
               maxHeight: '400px',
               overflow: 'auto',
             }}>
-              {response.markdown_summary}
-            </pre>
+              <Markdown>{response.markdown_summary}</Markdown>
+            </div>
           </div>
         </div>
       )}
