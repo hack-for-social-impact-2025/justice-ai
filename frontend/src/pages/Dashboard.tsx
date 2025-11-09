@@ -19,10 +19,15 @@ import SearchIcon from "@mui/icons-material/Search";
 import PdfUploadModal from "../PdfUploadModal";
 import mockData from "../mockData.json";
 import { PDFExporter, type MockParoleData } from "../utils/pdfExporter";
+import type { ClientData, SidebarClient } from "../types/client";
+import type { ParoleSummaryResponse } from "../services/api";
 
 function Dashboard() {
-  // Convert mockData to sidebar clients
-  const clients = mockData.map(item => ({
+  // Initialize with mock data
+  const [allClientData, setAllClientData] = useState<ClientData[]>(mockData as ClientData[]);
+
+  // Convert client data to sidebar clients
+  const clients: SidebarClient[] = allClientData.map(item => ({
     id: item.id,
     name: item.demographics.clientInfo.name,
     cdcrNumber: item.demographics.clientInfo.cdcrNumber,
@@ -32,8 +37,9 @@ function Dashboard() {
   }));
 
   const [search, setSearch] = useState("");
-  const [selected, setSelected] = useState(clients[0]);
+  const [selected, setSelected] = useState<SidebarClient>(clients[0]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
 
   const filteredClients = clients.filter(
     c =>
@@ -41,7 +47,48 @@ function Dashboard() {
   );
 
   // Find selected client's full data
-  const selectedData = mockData.find(item => item.demographics.clientInfo.name === selected.name);
+  const selectedData = allClientData.find(item => item.demographics.clientInfo.name === selected.name);
+
+  // Handle new PDF upload
+  const handleNewUpload = (uploadResult: ParoleSummaryResponse) => {
+    console.log("Processing new upload:", uploadResult);
+
+    // Generate a new ID (simple increment)
+    const newId = allClientData.length > 0 ? Math.max(...allClientData.map(item => item.id)) + 1 : 1;
+
+    const newClientData: ClientData = {
+      id: newId,
+      success: uploadResult.success,
+      filename: uploadResult.filename,
+      file_size: uploadResult.file_size,
+      extracted_text_length: uploadResult.extracted_text_length,
+      markdown_summary: uploadResult.markdown_summary,
+      demographics: uploadResult.demographics,
+      summary_type: uploadResult.summary_type,
+    };
+
+    // Add to client data (put new clients at the top)
+    setAllClientData(prev => [newClientData, ...prev]);
+
+    // Auto-select the newly uploaded client
+    const newSidebarClient: SidebarClient = {
+      id: newId,
+      name: uploadResult.demographics.clientInfo.name || `Client from ${uploadResult.filename}`,
+      cdcrNumber: uploadResult.demographics.clientInfo.cdcrNumber || "N/A",
+      dateOfBirth: uploadResult.demographics.clientInfo.dateOfBirth || "N/A",
+      contactInfo: uploadResult.demographics.clientInfo.contactInfo || "N/A",
+      status: "active",
+    };
+
+    setSelected(newSidebarClient);
+
+    // Show success message
+    setUploadSuccess(`Successfully processed ${uploadResult.filename}!`);
+    // Clear success message after 5 seconds
+    setTimeout(() => setUploadSuccess(null), 5000);
+
+    console.log("Successfully added new client:", newSidebarClient);
+  };
 
   // Handle PDF export
   const handleExportPDF = () => {
@@ -148,6 +195,26 @@ function Dashboard() {
 
       {/* Main Content */}
       <Box sx={{ flex: 1, p: 4 }}>
+        {/* Success Message */}
+        {uploadSuccess && (
+          <Paper
+            elevation={1}
+            sx={{
+              p: 2,
+              mb: 3,
+              backgroundColor: "#f0f9ff",
+              border: "1px solid #0ea5e9",
+              borderRadius: 2,
+              maxWidth: 800,
+              mx: "auto",
+            }}
+          >
+            <Typography variant="body1" sx={{ color: "#0369a1", fontWeight: 500, textAlign: "center" }}>
+              ✅ {uploadSuccess}
+            </Typography>
+          </Paper>
+        )}
+
         {/* Document Analysis Section */}
         <Paper
           elevation={2}
@@ -493,11 +560,7 @@ function Dashboard() {
       </Box>
 
       {/* PDF Upload Modal */}
-      <PdfUploadModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onUpload={() => setIsModalOpen(false)}
-      />
+      <PdfUploadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onUpload={handleNewUpload} />
     </Box>
   );
 }
