@@ -52,3 +52,35 @@ def upload_file(file: BinaryIO, destination_name: str) -> str:
     # Generate a signed URL that expires in 1 hour
     url = blob.generate_signed_url(version="v4", expiration=3600, method="GET")  # 1 hour
     return url
+
+def list_files():
+    """
+    List all files in the Google Cloud Storage bucket
+
+    Returns:
+        list: A list of dictionaries containing file information:
+            - name: The name of the file
+            - size: Size in bytes
+            - updated: Last modified timestamp
+            - url: Signed URL to access the file
+    """
+    bucket = get_bucket()
+    blobs = bucket.list_blobs()
+    
+    files = []
+    for blob in blobs:
+        url = blob.generate_signed_url(
+            version="v4",
+            expiration=3600,  # 1 hour
+            method="GET"
+        )
+        
+        files.append({
+            "name": blob.name,
+            "size": blob.size,
+            "updated": blob.updated.isoformat(),
+            "content_type": blob.content_type,
+            "url": url
+        })
+    
+    return files

@@ -28,3 +28,15 @@ async def upload_file_route(file: UploadFile):
         return {"success": True, "filename": file.filename, "file_size": file.size, "content_type": file.content_type, "url": url}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/list")
+async def list_files_route():
+    """
+    List all files stored in Google Cloud Storage
+    """
+    try:
+        files = gcs_list_files()
+        return {"success": True, "files": files}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
