@@ -1,73 +1,80 @@
 import { useState } from 'react'
 import './App.css'
-import PdfUploadModal from './PdfUploadModal'
+import ModalTestPage from './pages/ModalTestPage'
+import ApiTestPage from './pages/ApiTestPage'
+
+type Page = 'modal' | 'api'
 
 function App() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+  const [currentPage, setCurrentPage] = useState<Page>('modal')
 
-  const handleUpload = (file: File) => {
-    setUploadedFile(file)
-    console.log('File uploaded:', file.name)
-    // TODO: Send file to backend API
-  }
+  const navButtonStyle = (page: Page) => ({
+    padding: '10px 20px',
+    fontSize: '14px',
+    fontWeight: '500',
+    color: currentPage === page ? '#ffffff' : '#4b5563',
+    backgroundColor: currentPage === page ? '#2563eb' : '#f3f4f6',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+  })
 
   return (
-    <div style={{ padding: '40px', textAlign: 'center' }}>
-      <h1>Hack for Social Impact</h1>
-      <p style={{ marginBottom: '32px', color: '#6b7280' }}>
-        PDF Processing Application
-      </p>
-
-      <button
-        onClick={() => setIsModalOpen(true)}
+    <div>
+      {/* Navigation Bar */}
+      <nav
         style={{
-          padding: '12px 24px',
-          fontSize: '16px',
-          fontWeight: '500',
-          color: '#ffffff',
-          backgroundColor: '#2563eb',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: 'pointer',
-          transition: 'background-color 0.2s',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = '#1d4ed8'
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = '#2563eb'
+          backgroundColor: '#ffffff',
+          borderBottom: '1px solid #e5e7eb',
+          padding: '16px 24px',
+          display: 'flex',
+          gap: '12px',
+          alignItems: 'center',
         }}
       >
-        Upload PDF
-      </button>
-
-      {uploadedFile && (
-        <div
-          style={{
-            marginTop: '32px',
-            padding: '16px',
-            backgroundColor: '#f0fdf4',
-            border: '1px solid #86efac',
-            borderRadius: '8px',
-            maxWidth: '500px',
-            margin: '32px auto 0',
+        <h2 style={{ margin: 0, marginRight: '24px', fontSize: '18px' }}>
+          Test Pages
+        </h2>
+        <button
+          onClick={() => setCurrentPage('modal')}
+          style={navButtonStyle('modal')}
+          onMouseEnter={(e) => {
+            if (currentPage !== 'modal') {
+              e.currentTarget.style.backgroundColor = '#e5e7eb'
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (currentPage !== 'modal') {
+              e.currentTarget.style.backgroundColor = '#f3f4f6'
+            }
           }}
         >
-          <h3 style={{ margin: '0 0 8px 0', color: '#166534' }}>
-            File Uploaded Successfully
-          </h3>
-          <p style={{ margin: 0, color: '#15803d' }}>
-            {uploadedFile.name} ({(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)
-          </p>
-        </div>
-      )}
+          Modal Test
+        </button>
+        <button
+          onClick={() => setCurrentPage('api')}
+          style={navButtonStyle('api')}
+          onMouseEnter={(e) => {
+            if (currentPage !== 'api') {
+              e.currentTarget.style.backgroundColor = '#e5e7eb'
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (currentPage !== 'api') {
+              e.currentTarget.style.backgroundColor = '#f3f4f6'
+            }
+          }}
+        >
+          API Test
+        </button>
+      </nav>
 
-      <PdfUploadModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onUpload={handleUpload}
-      />
+      {/* Page Content */}
+      <div>
+        {currentPage === 'modal' && <ModalTestPage />}
+        {currentPage === 'api' && <ApiTestPage />}
+      </div>
     </div>
   )
 }
