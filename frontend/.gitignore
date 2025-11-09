@@ -13,6 +13,10 @@ dist-ssr
 *.local
 .vite
 
+# Environment variables
+.env.local
+.env*.local
+
 # Next.js artifacts (not used in this Vite project)
 .next
 next-env.d.ts
