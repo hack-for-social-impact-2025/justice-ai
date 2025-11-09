@@ -84,9 +84,12 @@
     - Document all required environment variables
 
 12. **Test**: Run backend locally with environment variables:
-    - Set ALLOWED_ORIGINS env var
-    - Start backend: `uvicorn main:app`
-    - Verify CORS configuration loads from env
+    - Set ALLOWED_ORIGINS env var: `export ALLOWED_ORIGINS="http://localhost:5173"`
+    - Start backend: `uv run uvicorn main:app --reload`
+    - Verify CORS configuration loads from env:
+      * Quick check: `python -c "from api.core.config import config; print(config.ALLOWED_ORIGINS)"`
+      * Full check: `curl -i -X OPTIONS http://localhost:8000/health -H "Origin: http://localhost:5173"`
+      * Should see `access-control-allow-origin: http://localhost:5173` (not `*`)
 
 13. Update `backend/.gitignore`:
     - Ensure service-account.json excluded
