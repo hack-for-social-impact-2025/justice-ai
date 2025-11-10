@@ -121,6 +121,13 @@ function Dashboard() {
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(' ');
 
+  // Helper to format client name to normal capitalization
+  const formatClientName = (name: string) =>
+    name
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+
   return (
     <Box sx={{ display: "flex", height: "100vh", bgcolor: "#fff" }}>
       {/* Sidebar */}
@@ -174,18 +181,13 @@ function Dashboard() {
             >
               <ListItemAvatar>
                 <Avatar sx={{ bgcolor: (theme) => theme.palette.primary.main, color: '#fff' }}>
-                  
-                  {client.name
-                    .split(" ")
-                    .map(n => n[0])
-                    .join("")}
-                
+                  {formatClientName(client.name).split(" ").map(n => n[0]).join("")}
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
                 primary={
                   <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-                    <Typography fontWeight={600}>{client.name}</Typography>
+                    <Typography fontWeight={600}>{formatClientName(client.name)}</Typography>
                     <Chip
                       label={client.status}
                       color={client.status === "active" ? "primary" : "default"}
@@ -276,10 +278,23 @@ function Dashboard() {
               >
                 Innocence Claim
               </Button>
-              <Button variant="contained" color="primary" sx={{ borderRadius: 2, textTransform: 'none', fontWeight: 600, px: 2, py: 1 }}>
+              {/* <Button variant="contained" color="primary" sx={{ borderRadius: 2, textTransform: 'none', fontWeight: 600, px: 2, py: 1 }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <FileDownloadOutlinedIcon sx={{ fontSize: 20, mr: 1 }} /> Export
                 </span>
+              </Button> */}
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ borderRadius: 2, textTransform: "none", fontWeight: 600, px: 2, py: 1 }}
+                onClick={handleExportPDF}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <FileDownloadOutlinedIcon sx={{ fontSize: 20, mr: 1 }} /> Export
+                </span>
+                {/* <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <FileDownloadOutlinedIcon sx={{ fontSize: 20, mr: 1 }} /> Export
+                </span> */}
               </Button>
             </Box>
           </Box>
@@ -608,7 +623,14 @@ function Dashboard() {
         <Modal open={isInnocenceModalOpen} onClose={() => setIsInnocenceModalOpen(false)}>
           <Box sx={{ bgcolor: '#fff', p: 4, borderRadius: 2, maxWidth: 600, mx: 'auto', my: 8, boxShadow: 3, outline: 'none', maxHeight: '70vh', overflowY: 'auto' }}>
             <Typography variant="h6" fontWeight={700} sx={{ mb: 2 }}>Possible Innocence Claims</Typography>
-            {innocenceFindings.map((finding, idx) => (
+            {(innocenceFindings as Array<{
+  quote: string;
+  page: number;
+  line: number;
+  speaker: string;
+  category: string;
+  significance: string;
+}>).map((finding, idx) => (
               <Paper key={idx} sx={{ p: 2, mb: 2, bgcolor: '#f7f8fa' }}>
                 <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 1 }}>
                   "{finding.quote}" ({finding.page},{finding.line})
