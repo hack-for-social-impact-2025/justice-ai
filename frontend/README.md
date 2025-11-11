@@ -145,13 +145,20 @@ const response = await uploadPdfForProcessing(
   maxTokens          // Optional token limit (default: 2000)
 )
 
-// Response includes:
-// - success: boolean
-// - filename: string
-// - file_size: number
-// - extracted_text_length: number
-// - markdown_summary: string (formatted with react-markdown)
-// - summary_type: string
+// The service returns a `PdfProcessResponse` object on success:
+interface PdfProcessResponse {
+  success: boolean;
+  filename: string;
+  file_size: number;
+  extracted_text_length: number;
+  markdown_summary: string;
+  summary_type: string;
+}
+
+// Or a `PdfProcessError` on failure, which can be caught in a try/catch block.
+interface PdfProcessError {
+  detail: string;
+}
 ```
 
 ### Backend Configuration
@@ -209,7 +216,11 @@ const myStyle = {
 ✅ Production build working (type-only imports configured)
 
 ### What's Next
-(No planned features at this time)
+1. Integrate modal with API (combine ModalTestPage + ApiTestPage functionality)
+2. Create main production page with full workflow
+3. Add file upload progress indicator
+4. Implement custom prompt and max tokens input fields
+5. Add result export/download functionality
 
 ---
 
