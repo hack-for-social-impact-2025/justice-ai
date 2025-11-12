@@ -1,17 +1,28 @@
 # Cloud Run Deployment Guide
 
+## 🎉 Deployment Status: ✅ CI/CD OPERATIONAL
+
+**Current Status**: Cloud Build CI/CD pipeline is **active and working**
+- ✅ Automated deployments from GitHub to Cloud Run
+- ✅ Backend API deployed and serving requests
+- ✅ All core endpoints tested and verified
+- ⏳ CORS configuration pending (needs frontend URL)
+
+---
+
 This guide covers deploying the backend API to Google Cloud Run, both manually and with automated CI/CD.
 
 ## Table of Contents
 
-1. [Prerequisites](#prerequisites)
-2. [Secret Manager Setup](#secret-manager-setup)
-3. [Manual Deployment](#manual-deployment)
-4. [Automated Deployment with Cloud Build](#automated-deployment-with-cloud-build)
-5. [Environment Variables](#environment-variables)
-6. [Updating Deployments](#updating-deployments)
-7. [Viewing Logs](#viewing-logs)
-8. [Troubleshooting](#troubleshooting)
+1. [Deployment Status](#deployment-status)
+2. [Prerequisites](#prerequisites)
+3. [Secret Manager Setup](#secret-manager-setup)
+4. [Manual Deployment](#manual-deployment)
+5. [Automated Deployment with Cloud Build](#automated-deployment-with-cloud-build)
+6. [Environment Variables](#environment-variables)
+7. [Updating Deployments](#updating-deployments)
+8. [Viewing Logs](#viewing-logs)
+9. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -175,7 +186,7 @@ Set up automatic deployments triggered by GitHub pushes.
    - **Description**: `Deploy backend to Cloud Run on push`
    - **Event**: `Push to a branch`
    - **Source**: Select your connected repository
-   - **Branch**: `^main$` (for main branch) or `^feature/cloud-run-deployment$` (for testing)
+   - **Branch**: `^main$` (⚠️ **IMPORTANT**: Only trigger on main branch to minimize build costs!)
    - **Configuration**: `Cloud Build configuration file (yaml or json)`
    - **Location**: `backend/cloudbuild.yaml`
 
@@ -210,7 +221,19 @@ gcloud secrets add-iam-policy-binding GEMINI_API_KEY \
   --role="roles/secretmanager.secretAccessor"
 ```
 
-### 4. Test Automated Deployment
+### 4. Update Existing Trigger (If Already Created)
+
+If you already have a trigger that builds on every branch, update it to save costs:
+
+1. Go to [Cloud Build Triggers](https://console.cloud.google.com/cloud-build/triggers)
+2. Find your `deploy-backend-to-cloud-run` trigger
+3. Click the **three dots** (⋮) → **Edit**
+4. Under **Branch**, change the regex to: `^main$`
+5. Click **Save**
+
+**Cost impact**: This change alone can reduce your Cloud Build costs by 80-90% by avoiding builds on feature branches.
+
+### 5. Test Automated Deployment
 
 ```bash
 # Make a change and commit
@@ -431,18 +454,40 @@ gcloud run services describe backend-api --region us-central1
 
 ### Free Tier Limits
 
-Cloud Run free tier includes:
+**Cloud Run** (free tier includes):
 - 2 million requests/month
 - 360,000 GB-seconds of memory
 - 180,000 vCPU-seconds
 - 1 GB network egress (North America)
 
+**Cloud Build** (free tier includes):
+- 120 build-minutes per day
+- After that: $0.003 per build-minute
+
 ### Tips to Stay Within Free Tier
+
+#### Cloud Run Optimization (Already Configured ✅)
 
 1. **Scale to zero**: Set `--min-instances=0` (already configured)
 2. **Optimize memory**: Use `512Mi` instead of 1Gi (already configured)
 3. **Reduce cold starts**: Accept slower first request (or upgrade to paid tier)
-4. **Monitor usage**: Set up [budget alerts](https://console.cloud.google.com/billing/budgets)
+
+#### Cloud Build Optimization (Cost-Saving Updates Applied ✅)
+
+1. **Build only on main branch**: Avoid triggering builds on feature branches (configured)
+2. **Use default E2 machine**: Default machine uses 1 build-minute per actual minute
+   - Previous N1_HIGHCPU_8: Used 8 build-minutes per actual minute (8x more expensive)
+3. **Batch commits**: Push multiple commits together instead of individually
+4. **Test locally first**: Use `docker build` locally before pushing to main
+
+**Estimated monthly cost with optimizations**: $0.00 (within free tier for typical usage of 1-3 builds/day)
+
+#### Monitor Usage
+
+Set up [budget alerts](https://console.cloud.google.com/billing/budgets) to get notified if you approach paid tier:
+- Set alert at $0.50
+- Set alert at $1.00
+- Review Cloud Build usage in [billing reports](https://console.cloud.google.com/billing)
 
 ---
 

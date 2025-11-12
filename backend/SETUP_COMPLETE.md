@@ -196,6 +196,69 @@ DEBUG=true
 LOG_LEVEL=INFO
 ```
 
+---
+
+## 🚀 **Cloud Build CI/CD Pipeline** ✅
+
+### **Deployment Status: OPERATIONAL**
+
+**Date Activated**: 2025-11-11
+
+The backend now features **fully automated CI/CD** from GitHub to Google Cloud Run:
+
+### **Pipeline Configuration**
+
+1. **Dockerfile** (`/backend/Dockerfile`)
+   - Python 3.13 slim base image
+   - UV package manager for fast dependency installation
+   - Non-root user for security
+   - Health checks and Cloud Run compatibility
+   - Single worker with Cloud Run auto-scaling
+
+2. **Cloud Build Config** (`/backend/cloudbuild.yaml`)
+   - Automated Docker image building
+   - Container Registry push with commit SHA tagging
+   - Automatic Cloud Run deployment
+   - Environment variables and secrets management
+   - 0-10 instance auto-scaling configuration
+
+3. **Deployment Flow**
+   ```
+   Git Push → Cloud Build Trigger → Docker Build →
+   Container Registry → Cloud Run Deploy → Live API
+   ```
+
+### **Production Deployment**
+
+- **Service**: backend-api
+- **Region**: us-central1
+- **URL**: https://backend-api-375767705771.us-central1.run.app
+- **Memory**: 512Mi
+- **CPU**: 1 core
+- **Scaling**: 0-10 instances (scales to zero when idle)
+- **Timeout**: 60s
+- **Access**: Public (unauthenticated)
+- **Secrets**: Gemini API key managed via Google Secret Manager
+
+### **CI/CD Benefits**
+
+- ⚡ **Zero downtime deployments** with Cloud Run's rolling updates
+- 💰 **Cost-efficient** with scale-to-zero capability
+- 🔒 **Secure** with secrets management and non-root containers
+- 📊 **Observable** with Cloud Logging integration
+- 🚀 **Fast builds** with Docker layer caching and N1_HIGHCPU_8 machines
+
+### **Pending Configuration**
+
+- ⏳ **CORS allowed origins** (needs frontend Vercel URL)
+- ⏳ **End-to-end testing** with frontend
+
+### **Recently Completed**
+
+- ✅ **Frontend environment variable** (VITE_API_BASE_URL configured: `https://backend-api-375767705771.us-central1.run.app`)
+
+---
+
 ## 🎉 **Ready for Production**
 
 The backend is now **fully configured and production-ready** with:
@@ -205,5 +268,6 @@ The backend is now **fully configured and production-ready** with:
 - **Comprehensive error handling** and graceful degradation
 - **Flexible configuration** for different environments
 - **Complete documentation** and testing scripts
+- **Automated CI/CD pipeline** from GitHub to Cloud Run ✅
 
-The updated innocence analysis prompt provides **significantly more accurate and legally relevant** analysis specifically tailored for parole hearing transcripts! 🚀
+The backend is now fully automated from code commit to production deployment! 🚀

@@ -9,6 +9,15 @@
 ## Deployment Status
 
 ✅ **Successfully Deployed** - 2025-11-09
+✅ **CI/CD Pipeline Active** - 2025-11-11
+
+### Automated Deployment
+
+- **Method**: GitHub → Cloud Build → Cloud Run
+- **Trigger**: Automatic on push to `main` branch
+- **Build Config**: `cloudbuild.yaml`
+- **Container**: `Dockerfile` (Python 3.13 + UV)
+- **Status**: Fully operational ✅
 
 ### Verified Endpoints
 
@@ -59,6 +68,41 @@ curl -X POST https://backend-api-375767705771.us-central1.run.app/api/pdf/proces
   -F "custom_prompt=Summarize this document"
 ```
 
+## Deployment Workflow
+
+### Automatic Deployment (Recommended)
+
+**Every push to `main` branch automatically:**
+
+1. Triggers Cloud Build
+2. Builds Docker image from `Dockerfile`
+3. Pushes image to Container Registry (tagged with commit SHA)
+4. Deploys to Cloud Run
+5. Zero-downtime rolling update
+
+**To deploy**: Simply push/merge to `main`:
+```bash
+git push origin main
+```
+
+**Monitor deployment**:
+```bash
+# View Cloud Build history
+gcloud builds list --limit=5
+
+# View specific build
+gcloud builds log <BUILD_ID>
+```
+
+### Manual Deployment (If Needed)
+
+```bash
+# Deploy from local directory
+gcloud run deploy backend-api \
+  --source . \
+  --region us-central1
+```
+
 ## Management Commands
 
 ```bash
@@ -68,8 +112,10 @@ gcloud run services describe backend-api --region us-central1
 # View logs
 gcloud run services logs tail backend-api --region us-central1
 
-# Update service
-gcloud run services update backend-api --region us-central1
+# Update environment variable
+gcloud run services update backend-api \
+  --region us-central1 \
+  --update-env-vars ALLOWED_ORIGINS=https://your-frontend.vercel.app
 
 # Delete service
 gcloud run services delete backend-api --region us-central1
@@ -78,11 +124,11 @@ gcloud run services delete backend-api --region us-central1
 ## Next Steps
 
 1. ✅ Backend deployed to Cloud Run
-2. ⏳ Update frontend `VITE_API_BASE_URL` to this URL
-3. ⏳ Deploy frontend to Vercel
+2. ✅ Update frontend `VITE_API_BASE_URL` to this URL
+3. ⏳ Deploy frontend to Vercel (or verify deployment)
 4. ⏳ Update `ALLOWED_ORIGINS` in Cloud Run to Vercel URL
 5. ⏳ Test end-to-end integration
 
 ---
 
-**Last Updated**: 2025-11-09
+**Last Updated**: 2025-11-11 (CI/CD Pipeline Operational)

@@ -519,7 +519,34 @@ pytest
 
 ## 🚀 Deployment
 
-### Docker (Optional)
+### ✅ Google Cloud Run (Production - CI/CD Active)
+
+The backend is deployed to Google Cloud Run with **automated CI/CD via Cloud Build**:
+
+**Status**: 🟢 **LIVE AND OPERATIONAL**
+
+- **Service URL**: https://backend-api-375767705771.us-central1.run.app
+- **Automatic deployments** triggered on Git push to main branch
+- **Docker containerization** with optimized Python 3.13 image
+- **Auto-scaling** from 0-10 instances based on traffic
+- **Secrets management** via Google Secret Manager
+- **Zero-downtime deployments** with rolling updates
+
+**Configuration files**:
+- `Dockerfile` - Container configuration
+- `cloudbuild.yaml` - CI/CD pipeline definition
+
+**Deployment flow**:
+```
+Git Push → Cloud Build → Docker Build → Container Registry → Cloud Run
+```
+
+**See also**:
+- [DEPLOYMENT.md](./DEPLOYMENT.md) - Detailed deployment guide
+- [SERVICE_URL.md](./SERVICE_URL.md) - Service endpoints and management
+- [CLOUD_RUN_PLAN.md](./CLOUD_RUN_PLAN.md) - Complete deployment plan
+
+### Docker (Local Development)
 
 ```bash
 # Build image
@@ -531,11 +558,14 @@ docker run -p 8000:8000 --env-file .env pdf-backend
 
 ### Production Checklist
 
-- [ ] Set `DEBUG=False` in production
-- [ ] Use environment-specific API keys
-- [ ] Set up proper logging
-- [ ] Configure HTTPS
-- [ ] Set up monitoring
+- [x] Set `DEBUG=False` in production
+- [x] Use environment-specific API keys
+- [x] Set up proper logging (Cloud Logging)
+- [x] Configure HTTPS (Cloud Run automatic)
+- [x] Set up monitoring (Cloud Run automatic)
+- [x] Configure frontend environment variable (VITE_API_BASE_URL)
+- [ ] Configure CORS with frontend Vercel URL
+- [ ] Test end-to-end with frontend
 
 ## 🤝 Contributing
 
