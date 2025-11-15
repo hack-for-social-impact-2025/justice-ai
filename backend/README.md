@@ -546,6 +546,23 @@ Git Push → Cloud Build → Docker Build → Container Registry → Cloud Run
 - [SERVICE_URL.md](./SERVICE_URL.md) - Service endpoints and management
 - [CLOUD_RUN_PLAN.md](./CLOUD_RUN_PLAN.md) - Complete deployment plan
 
+### Updating Production Frontend URL
+
+When you deploy a new frontend or change your Vercel URL, you need to update the backend CORS configuration:
+
+**Location:** `backend/cloudbuild.yaml` (line 65)
+
+**Steps:**
+1. Open `cloudbuild.yaml`
+2. Update `_ALLOWED_ORIGINS` substitution variable
+3. **Important:** Remove trailing slash from the URL
+   - ✅ Correct: `https://your-app.vercel.app`
+   - ❌ Wrong: `https://your-app.vercel.app/`
+4. Commit and push to main branch
+5. Cloud Build will automatically deploy with updated CORS
+
+**Current production frontend:** https://hack-for-social-impact-two.vercel.app
+
 ### Docker (Local Development)
 
 ```bash

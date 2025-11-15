@@ -50,9 +50,20 @@ steps:
       - '--set-env-vars=ALLOWED_ORIGINS=${_ALLOWED_ORIGINS}'
       - '--set-secrets=GEMINI_API_KEY=GEMINI_API_KEY:latest'
 
-# Substitution variables (set these in Cloud Build trigger)
+# ==============================================================================
+# 🔧 PRODUCTION CONFIGURATION
+# ==============================================================================
+# Update _ALLOWED_ORIGINS when deploying a new frontend URL:
+#   1. Update the URL below (remove trailing slash!)
+#   2. Commit and push to main branch
+#   3. Cloud Build will automatically deploy with new CORS settings
+#
+# ⚠️ Important: Browser Origin headers don't include trailing slashes.
+#    Use: https://your-app.vercel.app  ✅
+#    NOT: https://your-app.vercel.app/ ❌
+# ==============================================================================
 substitutions:
-  _ALLOWED_ORIGINS: 'https://your-frontend-domain.vercel.app'
+  _ALLOWED_ORIGINS: 'https://hack-for-social-impact-two.vercel.app'
 
 # Specify which resources to build
 options:
