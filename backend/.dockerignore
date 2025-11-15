@@ -80,6 +80,7 @@ cloudbuild.yaml
 # Generated files
 extracted_text.txt
 *_converted.md
+*_result.md
 
 # OS files
 Thumbs.db

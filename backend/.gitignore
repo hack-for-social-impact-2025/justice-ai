@@ -66,4 +66,5 @@ logs/
 # Generated files
 extracted_text.txt
 *_converted.md
+*_result.md
 server.log
