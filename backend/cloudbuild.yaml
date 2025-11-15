@@ -63,7 +63,7 @@ steps:
 #    NOT: https://your-app.vercel.app/ ❌
 # ==============================================================================
 substitutions:
-  _ALLOWED_ORIGINS: 'https://hack-for-social-impact-two.vercel.app'
+  _ALLOWED_ORIGINS: 'https://justice-ai-h4si.vercel.app,https://hack-for-social-impact-two.vercel.app'
 
 # Specify which resources to build
 options:
